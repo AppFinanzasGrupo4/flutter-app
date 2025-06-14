@@ -71,21 +71,11 @@ class _ConfiguracionScreenState extends State<ConfiguracionScreen> {
               onPressed: () {
                 // Aquí puedes guardar la configuración y navegar a la siguiente pantalla
                 // Por ejemplo, podrías usar Navigator.push para ir a HomeInversorScreen o HomeEmisorScreen
-                if (widget.usuario.rol == 'inversor') {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeInversorScreen(usuario: widget.usuario),
-                    ),
-                  );
-                } else {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeEmisorScreen(usuario: widget.usuario),
-                    ),
-                  );
-                }
+               Navigator.pushReplacementNamed(
+  context,
+  '/home',
+  arguments: widget.usuario,
+);
               },
               child: const Text('Guardar y continuar'),
             ),
