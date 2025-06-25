@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_finanzasapp/data/datasources/user_datasource.dart';
-import 'package:flutter_finanzasapp/presentation/screens/configuration.dart';
+import 'package:flutter_finanzasapp/presentation/screens/config_screen.dart';
+import 'package:flutter_finanzasapp/presentation/screens/home_emisor_screen.dart';
 import 'package:flutter_finanzasapp/presentation/screens/register.dart';
 import 'package:flutter_finanzasapp/presentation/widgets/input_decoration.dart';
 
@@ -31,10 +32,7 @@ class Login extends StatelessWidget {
 }
 
 class _LoginForm extends StatelessWidget {
-  const _LoginForm({
-    required this.emailCtrl,
-    required this.passwordCtrl,
-  });
+  const _LoginForm({required this.emailCtrl, required this.passwordCtrl});
 
   final TextEditingController emailCtrl;
   final TextEditingController passwordCtrl;
@@ -52,13 +50,20 @@ class _LoginForm extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(25),
               boxShadow: const [
-                BoxShadow(color: Colors.black12, blurRadius: 25, offset: Offset(0, 5))
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 25,
+                  offset: Offset(0, 5),
+                ),
               ],
             ),
             child: Column(
               children: [
                 const SizedBox(height: 10),
-                const Text('Iniciar sesión', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                const Text(
+                  'Iniciar sesión',
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 30),
                 Form(
                   child: Column(
@@ -84,37 +89,64 @@ class _LoginForm extends StatelessWidget {
                       ),
                       const SizedBox(height: 30),
                       MaterialButton(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                         color: const Color.fromRGBO(62, 62, 240, 1),
-                        padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                        child: const Text('Ingresar', style: TextStyle(color: Colors.white, fontSize: 18)),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 80,
+                          vertical: 15,
+                        ),
+                        child: const Text(
+                          'Ingresar',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
                         onPressed: () async {
                           final user = await UserDataSource.db.validarUsuario(
                             emailCtrl.text.trim(),
                             passwordCtrl.text.trim(),
                           );
-                          if (!context.mounted) return; // Check if the context is still mounted
-                          if (user != null) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ConfiguracionScreen(usuario: user),
-                              ),
-                            );
+                          if (!context.mounted) return;
 
-                            // Aquí puedes manejar la navegación según el rol del usuario
-                            // if (user.rol == 'emisor') {
-                            //   Navigator.pushNamed(context, 'emisor_dashboard');
-                            // } else if (user.rol == 'inversor') {
-                            //   Navigator.pushNamed(context, 'inversor_dashboard');
-                            // }
+                          if (user != null) {
+                            // Aquí deberías obtener la configuración del usuario, por ejemplo:
+                            // final config = await ConfigDataSource.db.getConfigForUser(user.id);
+                            // Por ahora, vamos a simular que no hay configuración:
+                            final config =
+                                null; // Reemplaza esto con la lógica real
+
+                            if (config != null) {
+                              // Si ya hay configuración, ir directo al Home
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const HomeEmisorScreen(),
+                                ),
+                              );
+                            } else {
+                              // Si no hay configuración, ir a ConfigScreen
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => ConfigScreen(
+                                        onSave:
+                                            () {}, // puedes dejarlo vacío aquí
+                                      ),
+                                ),
+                              );
+                            }
                           } else {
                             //mostrar alerta
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Usuario o contraseña incorrectos')),
+                              const SnackBar(
+                                content: Text(
+                                  'Usuario o contraseña incorrectos',
+                                ),
+                              ),
                             );
                           }
-                        }
+                        },
                       ),
                     ],
                   ),

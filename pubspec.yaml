@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   # SQLite package
   sqflite: ^2.2.0+4
+  intl: ^0.18.1
 
   # Path Provider package
   path_provider: ^2.0.15
