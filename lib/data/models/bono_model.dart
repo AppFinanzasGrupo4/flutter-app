@@ -15,6 +15,10 @@ class BonoModel extends BonoEntity {
     required super.tasaInteres,
     required super.tipoGracia,
     required super.periodoGracia,
+    required super.frecuenciaPago,
+    required super.fechaEmision,
+    required super.fechaVencimiento,
+    required super.primaRedencion,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,6 +32,10 @@ class BonoModel extends BonoEntity {
       'tasaInteres': tasaInteres,
       'tipoGracia': tipoGracia.name,
       'periodoGracia': periodoGracia,
+      'frecuenciaPago': frecuenciaPago,
+      'fechaEmision': fechaEmision.toIso8601String(),
+      'fechaVencimiento': fechaVencimiento.toIso8601String(),
+      'primaRedencion': primaRedencion,
     };
   }
 
@@ -45,6 +53,10 @@ class BonoModel extends BonoEntity {
         (e) => e.name == map['tipoGracia'],
       ),
       periodoGracia: map['periodoGracia'],
+      frecuenciaPago: map['frecuenciaPago'],
+      fechaEmision: DateTime.parse(map['fechaEmision']),
+      fechaVencimiento: DateTime.parse(map['fechaVencimiento']),
+      primaRedencion: map['primaRedencion'],
     );
   }
 }

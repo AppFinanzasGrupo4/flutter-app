@@ -33,7 +33,11 @@ class BonoLocalDatasource {
             plazo INTEGER,
             tasaInteres REAL,
             tipoGracia TEXT,
-            periodoGracia INTEGER
+            periodoGracia INTEGER,
+            frecuenciaPago TEXT,
+            fechaEmision TEXT,
+            fechaVencimiento TEXT,
+            primaRedencion REAL
           )
         ''');
       },

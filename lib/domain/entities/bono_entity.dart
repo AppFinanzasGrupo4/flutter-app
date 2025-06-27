@@ -10,6 +10,10 @@ class BonoEntity {
   final double tasaInteres;
   final TipoGracia tipoGracia;
   final int periodoGracia;
+  final String frecuenciaPago; // mensual, trimestral, etc.
+  final DateTime fechaEmision;
+  final DateTime fechaVencimiento;
+  final double primaRedencion; // porcentaje
 
   BonoEntity({
     required this.nombre,
@@ -21,5 +25,9 @@ class BonoEntity {
     required this.tasaInteres,
     required this.tipoGracia,
     required this.periodoGracia,
+    required this.frecuenciaPago,
+    required this.fechaEmision,
+    required this.fechaVencimiento,
+    required this.primaRedencion,
   });
 }

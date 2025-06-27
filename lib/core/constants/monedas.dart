@@ -1,1 +1,1 @@
-const monedas = ['PEN', 'USD', 'EUR', 'JPY', 'CLP', 'MXN', 'ARS', 'BRL'];
+const monedas = ['PEN', 'USD', 'EUR'];
