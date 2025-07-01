@@ -32,13 +32,18 @@ class _CrearBonoScreenState extends State<CrearBonoScreen> {
   final _valorNominalCtrl = TextEditingController();
   final _plazoCtrl = TextEditingController();
   final _tasaCtrl = TextEditingController();
+  final _frecuenciaTasaCtrl = TextEditingController();
   final _periodoGraciaCtrl = TextEditingController();
   final _fechaEmisionCtrl = TextEditingController();
   final _fechaVencimientoCtrl = TextEditingController();
   final _primaRedencionCtrl = TextEditingController();
-  final _frecuenciaPagoCtrl = TextEditingController(text: 'Mensual');
+  final _frecuenciaPagoCtrl = TextEditingController();
+  final _costoEstructuracionCtrl = TextEditingController();
+  final _costoColocacionCtrl = TextEditingController();
+  final _costoFlotacionCtrl = TextEditingController();
+  final _costoCavaliCtrl = TextEditingController();
 
-  final capitalizaciones = [
+  final frecuencias = [
     'Mensual',
     'Bimestral',
     'Trimestral',
@@ -58,6 +63,7 @@ class _CrearBonoScreenState extends State<CrearBonoScreen> {
       _valorNominalCtrl.text = widget.bonoExistente!.valorNominal.toString();
       _plazoCtrl.text = widget.bonoExistente!.plazo.toString();
       _tasaCtrl.text = widget.bonoExistente!.tasaInteres.toString();
+      _frecuenciaTasaCtrl.text = widget.bonoExistente!.frecuenciaTasa ?? '';
       moneda = widget.bonoExistente!.moneda;
       tipoTasa = widget.bonoExistente!.tipoTasa;
       capitalizacion = widget.bonoExistente!.capitalizacion;
@@ -66,7 +72,8 @@ class _CrearBonoScreenState extends State<CrearBonoScreen> {
         _periodoGraciaCtrl.text =
             widget.bonoExistente!.periodoGracia.toString();
       }
-      _frecuenciaPagoCtrl.text = widget.bonoExistente!.frecuenciaPago;
+      _frecuenciaPagoCtrl.text =
+          widget.bonoExistente!.frecuenciaPago.toString();
       _fechaEmisionCtrl.text = widget.bonoExistente!.fechaEmision.toString();
       _fechaVencimientoCtrl.text =
           widget.bonoExistente!.fechaVencimiento.toString();
@@ -74,6 +81,13 @@ class _CrearBonoScreenState extends State<CrearBonoScreen> {
           widget.bonoExistente!.primaRedencion.toString();
       fechaEmision = widget.bonoExistente!.fechaEmision;
       fechaVencimiento = widget.bonoExistente!.fechaVencimiento;
+      _costoEstructuracionCtrl.text =
+          widget.bonoExistente!.costoEstructuracion.toString();
+      _costoColocacionCtrl.text =
+          widget.bonoExistente!.costoColocacion.toString();
+      _costoFlotacionCtrl.text =
+          widget.bonoExistente!.costoFlotacion.toString();
+      _costoCavaliCtrl.text = widget.bonoExistente!.costoCavali.toString();
     }
   }
 
@@ -86,8 +100,13 @@ class _CrearBonoScreenState extends State<CrearBonoScreen> {
       _valorNominalCtrl.text = bono.valorNominal.toString();
       _plazoCtrl.text = bono.plazo.toString();
       _tasaCtrl.text = bono.tasaInteres.toString();
+      _frecuenciaTasaCtrl.text = bono.frecuenciaTasa ?? '';
       _fechaEmisionCtrl.text = bono.fechaEmision.toString();
       _fechaVencimientoCtrl.text = bono.fechaVencimiento.toString();
+      _costoEstructuracionCtrl.text = bono.costoEstructuracion.toString();
+      _costoColocacionCtrl.text = bono.costoColocacion.toString();
+      _costoFlotacionCtrl.text = bono.costoFlotacion.toString();
+      _costoCavaliCtrl.text = bono.costoCavali.toString();
       _primaRedencionCtrl.text = bono.primaRedencion.toString();
       _frecuenciaPagoCtrl.text = bono.frecuenciaPago.toString();
 
@@ -151,13 +170,18 @@ class _CrearBonoScreenState extends State<CrearBonoScreen> {
 
               DropdownButtonFormField<String>(
                 decoration: inputDecoration('Frecuencia de Pago'),
-                value: 'Mensual', // Asignar valor por defecto
+                value:
+                    _frecuenciaPagoCtrl.text.isEmpty
+                        ? null
+                        : _frecuenciaPagoCtrl.text,
                 items:
                     ['Mensual', 'Bimestral', 'Trimestral', 'Semestral', 'Anual']
                         .map((f) => DropdownMenuItem(value: f, child: Text(f)))
                         .toList(),
                 onChanged: (value) {
-                  // No se necesita lógica aquí, ya que es un valor por defecto
+                  setState(() {
+                    _frecuenciaPagoCtrl.text = value ?? '';
+                  });
                 },
               ),
               const SizedBox(height: 16),
@@ -216,13 +240,30 @@ class _CrearBonoScreenState extends State<CrearBonoScreen> {
                   });
                 },
               ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                decoration: inputDecoration('Frecuencia de Tasa'),
+                value:
+                    _frecuenciaTasaCtrl.text.isEmpty
+                        ? null
+                        : _frecuenciaTasaCtrl.text,
+                items:
+                    ['Mensual', 'Bimestral', 'Trimestral', 'Semestral', 'Anual']
+                        .map((f) => DropdownMenuItem(value: f, child: Text(f)))
+                        .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _frecuenciaTasaCtrl.text = value ?? '';
+                  });
+                },
+              ),
               if (tipoTasa == 'Nominal') ...[
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   value: capitalizacion,
                   decoration: inputDecoration('Capitalización'),
                   items:
-                      capitalizaciones
+                      frecuencias
                           .map(
                             (c) => DropdownMenuItem(value: c, child: Text(c)),
                           )
@@ -230,7 +271,12 @@ class _CrearBonoScreenState extends State<CrearBonoScreen> {
                   onChanged: (value) => setState(() => capitalizacion = value),
                 ),
               ],
-
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _tasaCtrl,
+                keyboardType: TextInputType.number,
+                decoration: inputDecoration('Tasa de interés (%)'),
+              ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _plazoCtrl,
@@ -275,10 +321,77 @@ class _CrearBonoScreenState extends State<CrearBonoScreen> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _tasaCtrl,
+                controller: _costoEstructuracionCtrl,
                 keyboardType: TextInputType.number,
-                decoration: inputDecoration('Tasa de interés (%)'),
+                decoration: inputDecoration('Costo de Estructuración (%)'),
+                onChanged: (value) {
+                  // Validar que sea un número válido
+                  if (value.isNotEmpty && double.tryParse(value) == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Ingrese un valor numérico válido para el costo de estructuración.',
+                        ),
+                      ),
+                    );
+                  }
+                },
               ),
+              const SizedBox(height: 16),
+              TextFormField(
+                decoration: inputDecoration('Costo de Colocación (%)'),
+                keyboardType: TextInputType.number,
+                controller: _costoColocacionCtrl,
+                onChanged: (value) {
+                  // Validar que sea un número válido
+                  if (value.isNotEmpty && double.tryParse(value) == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Ingrese un valor numérico válido para el costo de colocación.',
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                decoration: inputDecoration('Costo de Flotación (%)'),
+                keyboardType: TextInputType.number,
+                controller: _costoFlotacionCtrl,
+                onChanged: (value) {
+                  // Validar que sea un número válido
+                  if (value.isNotEmpty && double.tryParse(value) == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Ingrese un valor numérico válido para el costo de flotación.',
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                decoration: inputDecoration('Costo de Cavali (%)'),
+                keyboardType: TextInputType.number,
+                controller: _costoCavaliCtrl,
+                onChanged: (value) {
+                  // Validar que sea un número válido
+                  if (value.isNotEmpty && double.tryParse(value) == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Ingrese un valor numérico válido para el costo de Cavali.',
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
+
               const SizedBox(height: 16),
               TextFormField(
                 decoration: inputDecoration('Prima de Redención (%)'),
@@ -316,12 +429,13 @@ class _CrearBonoScreenState extends State<CrearBonoScreen> {
                           double.tryParse(_valorNominalCtrl.text) ?? 0,
                       plazo: int.tryParse(_plazoCtrl.text) ?? 0,
                       tasaInteres: double.tryParse(_tasaCtrl.text) ?? 0,
+                      frecuenciaTasa: _frecuenciaTasaCtrl.text,
                       tipoGracia: tipoGracia,
                       periodoGracia:
                           tipoGracia != TipoGracia.ninguna
                               ? int.tryParse(_periodoGraciaCtrl.text) ?? 0
                               : 0,
-                      frecuenciaPago: 'Mensual', // Asignar valor por defecto
+                      frecuenciaPago: _frecuenciaPagoCtrl.text,
                       fechaEmision: DateTime.now(),
                       fechaVencimiento: DateTime.now().add(
                         Duration(
@@ -330,6 +444,13 @@ class _CrearBonoScreenState extends State<CrearBonoScreen> {
                               360, // Asignar fecha de vencimiento
                         ),
                       ),
+                      costoEstructuracion:
+                          double.tryParse(_costoEstructuracionCtrl.text) ?? 0,
+                      costoColocacion:
+                          double.tryParse(_costoColocacionCtrl.text) ?? 0,
+                      costoFlotacion:
+                          double.tryParse(_costoFlotacionCtrl.text) ?? 0,
+                      costoCavali: double.tryParse(_costoCavaliCtrl.text) ?? 0,
                       primaRedencion:
                           double.tryParse(_primaRedencionCtrl.text) ?? 0,
                     );

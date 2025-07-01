@@ -29,6 +29,7 @@ class ConfigLocalDatasource {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             moneda TEXT,
             tipoTasa TEXT,
+            frecuenciaTasa TEXT,
             capitalizacion TEXT
           )
         ''');

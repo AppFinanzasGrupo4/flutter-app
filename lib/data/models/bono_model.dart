@@ -13,11 +13,16 @@ class BonoModel extends BonoEntity {
     required super.valorNominal,
     required super.plazo,
     required super.tasaInteres,
+    required super.frecuenciaTasa,
     required super.tipoGracia,
     required super.periodoGracia,
     required super.frecuenciaPago,
     required super.fechaEmision,
     required super.fechaVencimiento,
+    required super.costoEstructuracion,
+    required super.costoColocacion,
+    required super.costoFlotacion,
+    required super.costoCavali,
     required super.primaRedencion,
   });
 
@@ -30,11 +35,16 @@ class BonoModel extends BonoEntity {
       'valorNominal': valorNominal,
       'plazo': plazo,
       'tasaInteres': tasaInteres,
+      'frecuenciaTasa': frecuenciaTasa,
       'tipoGracia': tipoGracia.name,
       'periodoGracia': periodoGracia,
       'frecuenciaPago': frecuenciaPago,
       'fechaEmision': fechaEmision.toIso8601String(),
       'fechaVencimiento': fechaVencimiento.toIso8601String(),
+      'costoEstructuracion': costoEstructuracion,
+      'costoColocacion': costoColocacion,
+      'costoFlotacion': costoFlotacion,
+      'costoCavali': costoCavali,
       'primaRedencion': primaRedencion,
     };
   }
@@ -49,6 +59,7 @@ class BonoModel extends BonoEntity {
       valorNominal: map['valorNominal'],
       plazo: map['plazo'],
       tasaInteres: map['tasaInteres'],
+      frecuenciaTasa: map['frecuenciaTasa'],
       tipoGracia: TipoGracia.values.firstWhere(
         (e) => e.name == map['tipoGracia'],
       ),
@@ -56,6 +67,10 @@ class BonoModel extends BonoEntity {
       frecuenciaPago: map['frecuenciaPago'],
       fechaEmision: DateTime.parse(map['fechaEmision']),
       fechaVencimiento: DateTime.parse(map['fechaVencimiento']),
+      costoEstructuracion: map['costoEstructuracion'],
+      costoColocacion: map['costoColocacion'],
+      costoFlotacion: map['costoFlotacion'],
+      costoCavali: map['costoCavali'],
       primaRedencion: map['primaRedencion'],
     );
   }

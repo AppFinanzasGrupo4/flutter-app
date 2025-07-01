@@ -4,6 +4,7 @@ class ConfigModel extends ConfigEntity {
   ConfigModel({
     required super.moneda,
     required super.tipoTasa,
+    super.frecuenciaTasa,
     super.capitalizacion,
   });
 
@@ -11,6 +12,7 @@ class ConfigModel extends ConfigEntity {
     return ConfigModel(
       moneda: map['moneda'],
       tipoTasa: map['tipoTasa'],
+      frecuenciaTasa: map['frecuenciaTasa'],
       capitalizacion: map['capitalizacion'],
     );
   }
@@ -19,6 +21,7 @@ class ConfigModel extends ConfigEntity {
     return {
       'moneda': moneda,
       'tipoTasa': tipoTasa,
+      'frecuenciaTasa': frecuenciaTasa,
       'capitalizacion': capitalizacion,
     };
   }

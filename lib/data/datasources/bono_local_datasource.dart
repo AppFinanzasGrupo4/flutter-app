@@ -32,11 +32,16 @@ class BonoLocalDatasource {
             valorNominal REAL,
             plazo INTEGER,
             tasaInteres REAL,
+            frecuenciaTasa TEXT,
             tipoGracia TEXT,
             periodoGracia INTEGER,
             frecuenciaPago TEXT,
             fechaEmision TEXT,
             fechaVencimiento TEXT,
+            costoEstructuracion REAL,
+            costoColocacion REAL,
+            costoFlotacion REAL,
+            costoCavali REAL,
             primaRedencion REAL
           )
         ''');

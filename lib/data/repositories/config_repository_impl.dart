@@ -13,6 +13,7 @@ class ConfigRepositoryImpl implements ConfigRepository {
     final model = ConfigModel(
       moneda: config.moneda,
       tipoTasa: config.tipoTasa,
+      frecuenciaTasa: config.frecuenciaTasa,
       capitalizacion: config.capitalizacion,
     );
     return datasource.saveConfig(model);

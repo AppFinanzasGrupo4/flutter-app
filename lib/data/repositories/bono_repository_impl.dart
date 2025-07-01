@@ -19,11 +19,16 @@ class BonoRepositoryImpl implements BonoRepository {
       valorNominal: bono.valorNominal,
       plazo: bono.plazo,
       tasaInteres: bono.tasaInteres,
+      frecuenciaTasa: bono.frecuenciaTasa,
       tipoGracia: bono.tipoGracia,
       periodoGracia: bono.periodoGracia,
       frecuenciaPago: bono.frecuenciaPago,
       fechaEmision: bono.fechaEmision,
       fechaVencimiento: bono.fechaVencimiento,
+      costoEstructuracion: bono.costoEstructuracion,
+      costoColocacion: bono.costoColocacion,
+      costoFlotacion: bono.costoFlotacion,
+      costoCavali: bono.costoCavali,
       primaRedencion: bono.primaRedencion,
     );
     return datasource.saveBono(model);

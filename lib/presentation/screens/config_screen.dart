@@ -20,9 +20,9 @@ class ConfigScreen extends StatefulWidget {
 class _ConfigScreenState extends State<ConfigScreen> {
   String selectedMoneda = 'PEN';
   String selectedTipoTasa = 'Efectiva';
-  String? selectedCapitalizacion;
+  String? selectedFrecuencia;
 
-  final capitalizaciones = [
+  final frecuencias = [
     'Mensual',
     'Bimestral',
     'Trimestral',
@@ -58,9 +58,6 @@ class _ConfigScreenState extends State<ConfigScreen> {
               onChanged: (value) {
                 setState(() {
                   selectedTipoTasa = value!;
-                  if (selectedTipoTasa == 'Efectiva') {
-                    selectedCapitalizacion = null;
-                  }
                 });
               },
             ),
@@ -68,13 +65,13 @@ class _ConfigScreenState extends State<ConfigScreen> {
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 decoration: inputDecoration('Capitalización'),
-                value: selectedCapitalizacion,
+                value: selectedFrecuencia,
                 items:
-                    capitalizaciones
+                    frecuencias
                         .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                         .toList(),
                 onChanged:
-                    (value) => setState(() => selectedCapitalizacion = value),
+                    (value) => setState(() => selectedFrecuencia = value),
               ),
             ],
             const Spacer(),
@@ -84,10 +81,9 @@ class _ConfigScreenState extends State<ConfigScreen> {
                 final config = ConfigEntity(
                   moneda: selectedMoneda,
                   tipoTasa: selectedTipoTasa,
+                  frecuenciaTasa: selectedFrecuencia,
                   capitalizacion:
-                      selectedTipoTasa == 'Nominal'
-                          ? selectedCapitalizacion
-                          : null,
+                      selectedTipoTasa == 'Nominal' ? selectedFrecuencia : null,
                 );
                 final repo = ConfigRepositoryImpl(ConfigLocalDatasource());
                 await repo.saveConfig(config);
