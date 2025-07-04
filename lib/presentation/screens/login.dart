@@ -4,6 +4,7 @@ import 'package:flutter_finanzasapp/presentation/screens/config_screen.dart';
 import 'package:flutter_finanzasapp/presentation/screens/home_emisor_screen.dart';
 import 'package:flutter_finanzasapp/presentation/screens/register.dart';
 import 'package:flutter_finanzasapp/presentation/widgets/input_decoration.dart';
+import 'package:flutter_finanzasapp/presentation/screens/home_inversor.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -106,43 +107,36 @@ class _LoginForm extends StatelessWidget {
                             emailCtrl.text.trim(),
                             passwordCtrl.text.trim(),
                           );
+
                           if (!context.mounted) return;
 
-                          if (user != null) {
-                            // Aquí deberías obtener la configuración del usuario, por ejemplo:
-                            // final config = await ConfigDataSource.db.getConfigForUser(user.id);
-                            // Por ahora, vamos a simular que no hay configuración:
-                            final config =
-                                null; // Reemplaza esto con la lógica real
-
-                            if (config != null) {
-                              // Si ya hay configuración, ir directo al Home
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const HomeEmisorScreen(),
-                                ),
-                              );
-                            } else {
-                              // Si no hay configuración, ir a ConfigScreen
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (_) => ConfigScreen(
-                                        onSave:
-                                            () {}, // puedes dejarlo vacío aquí
-                                      ),
-                                ),
-                              );
-                            }
-                          } else {
-                            //mostrar alerta
+                          if (user == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text(
-                                  'Usuario o contraseña incorrectos',
-                                ),
+                                content: Text('Usuario o contraseña incorrectos'),
+                              ),
+                            );
+                            return;
+                          }
+
+                          if (user.rol == 'emisor') {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const HomeEmisorScreen(),
+                              ),
+                            );
+                          } else if (user.rol == 'inversor') {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => HomeInversorScreen(usuario: user),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Tipo de usuario no reconocido'),
                               ),
                             );
                           }

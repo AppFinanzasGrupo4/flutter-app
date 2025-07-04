@@ -41,7 +41,6 @@ dependencies:
 
   # Path Provider package
   path_provider: ^2.0.15
-  ir: ^0.0.5
   logger: ^2.6.0
 
 dev_dependencies:
