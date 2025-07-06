@@ -1,52 +1,14 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
-
 import '../models/bono_model.dart';
+import 'database_manager.dart';
 
 class BonoLocalDatasource {
   static final BonoLocalDatasource _instance = BonoLocalDatasource._internal();
   factory BonoLocalDatasource() => _instance;
   BonoLocalDatasource._internal();
 
-  Database? _db;
-
   Future<Database> get database async {
-    if (_db != null) return _db!;
-    _db = await _initDB();
-    return _db!;
-  }
-
-  Future<Database> _initDB() async {
-    final path = join(await getDatabasesPath(), 'bonos.db');
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute('''
-          CREATE TABLE bonos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT,
-            moneda TEXT,
-            tipoTasa TEXT,
-            capitalizacion TEXT,
-            valorNominal REAL,
-            plazo INTEGER,
-            tasaInteres REAL,
-            frecuenciaTasa TEXT,
-            tipoGracia TEXT,
-            periodoGracia INTEGER,
-            frecuenciaPago TEXT,
-            fechaEmision TEXT,
-            fechaVencimiento TEXT,
-            costoEstructuracion REAL,
-            costoColocacion REAL,
-            costoFlotacion REAL,
-            costoCavali REAL,
-            primaRedencion REAL
-          )
-        ''');
-      },
-    );
+    return await DatabaseManager().database;
   }
 
   Future<void> saveBono(BonoModel bono) async {
@@ -54,9 +16,59 @@ class BonoLocalDatasource {
     await db.insert('bonos', bono.toMap());
   }
 
+  /// Obtiene todos los bonos creados por un emisor específico
+  Future<List<BonoModel>> getBonosByEmisor(int userId) async {
+    final db = await database;
+    final result = await db.query(
+      'bonos',
+      where: 'userId = ?',
+      whereArgs: [userId],
+      orderBy: 'fechaEmision DESC',
+    );
+    return result.map((map) => BonoModel.fromMap(map)).toList();
+  }
+
+  /// Obtiene todos los bonos disponibles (para inversores)
   Future<List<BonoModel>> getAllBonos() async {
     final db = await database;
-    final result = await db.query('bonos');
-    return result.map((e) => BonoModel.fromMap(e)).toList();
+    final result = await db.query('bonos', orderBy: 'fechaEmision DESC');
+    return result.map((map) => BonoModel.fromMap(map)).toList();
+  }
+
+  /// Inserta un nuevo bono
+  Future<int> insertBono(BonoModel bono) async {
+    final db = await database;
+    return await db.insert('bonos', bono.toMap());
+  }
+
+  /// Actualiza un bono existente
+  Future<int> updateBono(BonoModel bono) async {
+    final db = await database;
+    return await db.update(
+      'bonos',
+      bono.toMap(),
+      where: 'id = ? AND userId = ?',
+      whereArgs: [bono.id, bono.userId],
+    );
+  }
+
+  /// Elimina un bono (solo el emisor que lo creó)
+  Future<int> deleteBono(int bonoId, int userId) async {
+    final db = await database;
+    return await db.delete(
+      'bonos',
+      where: 'id = ? AND userId = ?',
+      whereArgs: [bonoId, userId],
+    );
+  }
+
+  /// Obtiene un bono específico por ID
+  Future<BonoModel?> getBonoById(int id) async {
+    final db = await database;
+    final result = await db.query('bonos', where: 'id = ?', whereArgs: [id]);
+    if (result.isNotEmpty) {
+      return BonoModel.fromMap(result.first);
+    }
+    return null;
   }
 }

@@ -80,14 +80,22 @@ List<Map<String, dynamic>> calcularFlujosCaja(BonoModel bono) {
 int _frecuenciaToInt(String frecuencia) {
   switch (frecuencia) {
     case 'Mensual':
+    case 'mensual':
       return 12;
     case 'Bimestral':
+    case 'bimestral':
       return 6;
     case 'Trimestral':
+    case 'trimestral':
       return 4;
+    case 'Cuatrimestral':
+    case 'cuatrimestral':
+      return 3;
     case 'Semestral':
+    case 'semestral':
       return 2;
     case 'Anual':
+    case 'anual':
       return 1;
     default:
       return 1; // Por defecto, anual

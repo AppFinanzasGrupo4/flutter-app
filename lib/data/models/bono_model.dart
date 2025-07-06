@@ -3,9 +3,11 @@ import 'package:flutter_finanzasapp/domain/entities/bono_entity.dart';
 
 class BonoModel extends BonoEntity {
   final int? id;
+  final int? userId; // ID del emisor que creó el bono
 
   BonoModel({
     this.id,
+    this.userId,
     required super.nombre,
     required super.moneda,
     required super.tipoTasa,
@@ -28,6 +30,7 @@ class BonoModel extends BonoEntity {
 
   Map<String, dynamic> toMap() {
     return {
+      'userId': userId,
       'nombre': nombre,
       'moneda': moneda,
       'tipoTasa': tipoTasa,
@@ -52,6 +55,7 @@ class BonoModel extends BonoEntity {
   factory BonoModel.fromMap(Map<String, dynamic> map) {
     return BonoModel(
       id: map['id'],
+      userId: map['userId'],
       nombre: map['nombre'],
       moneda: map['moneda'],
       tipoTasa: map['tipoTasa'],

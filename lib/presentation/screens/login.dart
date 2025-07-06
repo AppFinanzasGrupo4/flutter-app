@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_finanzasapp/core/services/session_service.dart';
 import 'package:flutter_finanzasapp/data/datasources/user_datasource.dart';
-import 'package:flutter_finanzasapp/presentation/screens/config_screen.dart';
 import 'package:flutter_finanzasapp/presentation/screens/home_emisor_screen.dart';
 import 'package:flutter_finanzasapp/presentation/screens/register.dart';
 import 'package:flutter_finanzasapp/presentation/widgets/input_decoration.dart';
@@ -113,11 +113,16 @@ class _LoginForm extends StatelessWidget {
                           if (user == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('Usuario o contraseña incorrectos'),
+                                content: Text(
+                                  'Usuario o contraseña incorrectos',
+                                ),
                               ),
                             );
                             return;
                           }
+
+                          // Iniciar sesión en el SessionService
+                          SessionService().login(user);
 
                           if (user.rol == 'emisor') {
                             Navigator.pushReplacement(
@@ -130,7 +135,8 @@ class _LoginForm extends StatelessWidget {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => HomeInversorScreen(usuario: user),
+                                builder:
+                                    (_) => HomeInversorScreen(usuario: user),
                               ),
                             );
                           } else {
